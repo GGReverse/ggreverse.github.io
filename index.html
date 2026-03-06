@@ -3,35 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unsere Zeit ❤️</title>
+<title>Unsere Zeit 🖤</title>
 
 <style>
 
-body{
+*{
+box-sizing:border-box;
 margin:0;
-font-family: 'Segoe UI', sans-serif;
-background: linear-gradient(135deg,#ff758c,#ff7eb3);
+padding:0;
+}
+
+body{
+font-family:'Segoe UI',sans-serif;
+background: radial-gradient(circle at top,#1a0005,#000 80%);
 color:white;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-text-align:center;
 overflow:hidden;
+opacity:0;
+transform:scale(1.08);
+animation:openApp 1.2s ease forwards;
+}
+
+@keyframes openApp{
+to{
+opacity:1;
+transform:scale(1);
+}
 }
 
 .container{
-background: rgba(255,255,255,0.15);
+background:rgba(255,0,60,0.08);
+border:1px solid rgba(255,0,80,0.3);
+backdrop-filter:blur(20px);
 padding:40px;
-border-radius:20px;
-backdrop-filter: blur(15px);
-box-shadow:0 10px 40px rgba(0,0,0,0.2);
-max-width:400px;
+border-radius:25px;
+box-shadow:
+0 0 40px rgba(255,0,80,0.25),
+inset 0 0 25px rgba(255,0,80,0.15);
+text-align:center;
+max-width:420px;
+z-index:2;
 }
 
 h1{
-margin-top:0;
 font-size:28px;
+margin-bottom:10px;
 }
 
 .date{
@@ -40,28 +59,63 @@ margin-bottom:20px;
 }
 
 .counter{
-font-size:20px;
+font-size:22px;
 line-height:1.6;
 }
 
 .heart{
-font-size:60px;
-animation:beat 1.2s infinite;
-margin-bottom:10px;
+font-size:70px;
+margin-bottom:15px;
+animation:beat 1.4s infinite;
 }
 
 @keyframes beat{
 0%{transform:scale(1)}
-25%{transform:scale(1.15)}
-40%{transform:scale(1)}
-60%{transform:scale(1.15)}
+30%{transform:scale(1.15)}
+50%{transform:scale(1)}
+70%{transform:scale(1.15)}
 100%{transform:scale(1)}
 }
 
 .footer{
 margin-top:25px;
 font-size:14px;
-opacity:0.7;
+opacity:0.6;
+letter-spacing:1px;
+}
+
+/* floating hearts */
+
+.heart-bg{
+position:absolute;
+color:#ff2e63;
+opacity:0.15;
+animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+from{transform:translateY(100vh)}
+to{transform:translateY(-10vh)}
+}
+
+/* confetti */
+
+.confetti{
+position:absolute;
+width:8px;
+height:8px;
+background:red;
+opacity:0.8;
+animation:confettiFall linear forwards;
+}
+
+@keyframes confettiFall{
+from{
+transform:translateY(-10vh) rotate(0deg);
+}
+to{
+transform:translateY(110vh) rotate(720deg);
+}
 }
 
 </style>
@@ -80,38 +134,108 @@ opacity:0.7;
 <div class="counter" id="counter"></div>
 
 <div class="footer">
-Für immer & ewig ✨
+für immer & ewig 🖤
 </div>
 
 </div>
 
 <script>
 
-const startDate = new Date("2023-08-12T00:00:00");
+/* STARTDATUM */
+
+const startDate = new Date("2021-03-12T00:00:00");
+
+/* Datum anzeigen */
 
 document.getElementById("date").innerText =
 startDate.toLocaleDateString("de-DE");
+
+/* COUNTER */
 
 function updateCounter(){
 
 const now = new Date();
 const diff = now - startDate;
 
-const seconds = Math.floor(diff / 1000) % 60;
-const minutes = Math.floor(diff / (1000*60)) % 60;
-const hours = Math.floor(diff / (1000*60*60)) % 24;
-const days = Math.floor(diff / (1000*60*60*24));
+const seconds = Math.floor(diff/1000)%60;
+const minutes = Math.floor(diff/(1000*60))%60;
+const hours = Math.floor(diff/(1000*60*60))%24;
+const days = Math.floor(diff/(1000*60*60*24));
 
-document.getElementById("counter").innerHTML =
-days + " Tage<br>" +
-hours + " Stunden<br>" +
-minutes + " Minuten<br>" +
-seconds + " Sekunden";
+document.getElementById("counter").innerHTML=
+
+days+" Tage<br>"+
+hours+" Stunden<br>"+
+minutes+" Minuten<br>"+
+seconds+" Sekunden";
 
 }
 
 setInterval(updateCounter,1000);
 updateCounter();
+
+/* FLOATING HEARTS */
+
+function createHeart(){
+
+const heart=document.createElement("div");
+
+heart.className="heart-bg";
+
+heart.innerHTML="❤";
+
+heart.style.left=Math.random()*100+"vw";
+
+heart.style.animationDuration=(6+Math.random()*6)+"s";
+
+heart.style.fontSize=(15+Math.random()*25)+"px";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>{heart.remove()},12000);
+
+}
+
+setInterval(createHeart,900);
+
+/* KONFETTI AM JAHRESTAG */
+
+function anniversaryConfetti(){
+
+const today=new Date();
+
+if(
+today.getDate()===12 &&
+today.getMonth()===2
+){
+
+for(let i=0;i<120;i++){
+
+const confetti=document.createElement("div");
+
+confetti.className="confetti";
+
+confetti.style.left=Math.random()*100+"vw";
+
+confetti.style.background=
+`hsl(${Math.random()*360},70%,60%)`;
+
+confetti.style.animationDuration=
+(3+Math.random()*4)+"s";
+
+document.body.appendChild(confetti);
+
+setTimeout(()=>{
+confetti.remove();
+},7000);
+
+}
+
+}
+
+}
+
+anniversaryConfetti();
 
 </script>
 
