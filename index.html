@@ -34,6 +34,19 @@ transform:scale(1);
 }
 }
 
+/* star background */
+
+#stars{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+/* card */
+
 .container{
 background:rgba(255,0,60,0.08);
 border:1px solid rgba(255,0,80,0.3);
@@ -67,6 +80,7 @@ line-height:1.6;
 font-size:70px;
 margin-bottom:15px;
 animation:beat 1.4s infinite;
+cursor:pointer;
 }
 
 @keyframes beat{
@@ -81,7 +95,6 @@ animation:beat 1.4s infinite;
 margin-top:25px;
 font-size:14px;
 opacity:0.6;
-letter-spacing:1px;
 }
 
 /* floating hearts */
@@ -104,8 +117,7 @@ to{transform:translateY(-10vh)}
 position:absolute;
 width:8px;
 height:8px;
-background:red;
-opacity:0.8;
+opacity:0.9;
 animation:confettiFall linear forwards;
 }
 
@@ -118,14 +130,58 @@ transform:translateY(110vh) rotate(720deg);
 }
 }
 
+/* message modal */
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.4s;
+z-index:5;
+}
+
+.modal.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.modal-box{
+background:#120005;
+padding:35px;
+border-radius:20px;
+max-width:320px;
+text-align:center;
+box-shadow:0 0 40px rgba(255,0,80,0.4);
+}
+
+.modal-box button{
+margin-top:20px;
+padding:10px 18px;
+border:none;
+border-radius:10px;
+background:#ff2e63;
+color:white;
+cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
+<canvas id="stars"></canvas>
+
 <div class="container">
 
-<div class="heart">❤️</div>
+<div class="heart" onclick="openMessage()">❤️</div>
 
 <h1>Wir kennen uns schon seit</h1>
 
@@ -139,28 +195,44 @@ für immer & ewig 🖤
 
 </div>
 
+<div class="modal" id="loveModal">
+
+<div class="modal-box">
+
+<h2>💌 Für dich</h2>
+
+<p>
+Danke für jeden Moment mit dir.  
+Seit dem 12.03.2021 ist mein Leben so viel schöner geworden.  
+Ich freue mich auf alles, was noch vor uns liegt ❤️
+</p>
+
+<button onclick="closeMessage()">Schließen</button>
+
+</div>
+
+</div>
+
 <script>
 
-/* STARTDATUM */
+/* start date */
 
 const startDate = new Date("2021-03-12T00:00:00");
-
-/* Datum anzeigen */
 
 document.getElementById("date").innerText =
 startDate.toLocaleDateString("de-DE");
 
-/* COUNTER */
+/* counter */
 
 function updateCounter(){
 
-const now = new Date();
-const diff = now - startDate;
+const now=new Date();
+const diff=now-startDate;
 
-const seconds = Math.floor(diff/1000)%60;
-const minutes = Math.floor(diff/(1000*60))%60;
-const hours = Math.floor(diff/(1000*60*60))%24;
-const days = Math.floor(diff/(1000*60*60*24));
+const seconds=Math.floor(diff/1000)%60;
+const minutes=Math.floor(diff/(1000*60))%60;
+const hours=Math.floor(diff/(1000*60*60))%24;
+const days=Math.floor(diff/(1000*60*60*24));
 
 document.getElementById("counter").innerHTML=
 
@@ -174,40 +246,34 @@ seconds+" Sekunden";
 setInterval(updateCounter,1000);
 updateCounter();
 
-/* FLOATING HEARTS */
+/* floating hearts */
 
 function createHeart(){
 
 const heart=document.createElement("div");
 
 heart.className="heart-bg";
-
 heart.innerHTML="❤";
 
 heart.style.left=Math.random()*100+"vw";
-
 heart.style.animationDuration=(6+Math.random()*6)+"s";
-
 heart.style.fontSize=(15+Math.random()*25)+"px";
 
 document.body.appendChild(heart);
 
-setTimeout(()=>{heart.remove()},12000);
+setTimeout(()=>heart.remove(),12000);
 
 }
 
 setInterval(createHeart,900);
 
-/* KONFETTI AM JAHRESTAG */
+/* anniversary confetti */
 
 function anniversaryConfetti(){
 
 const today=new Date();
 
-if(
-today.getDate()===12 &&
-today.getMonth()===2
-){
+if(today.getDate()===12 && today.getMonth()===2){
 
 for(let i=0;i<120;i++){
 
@@ -216,18 +282,12 @@ const confetti=document.createElement("div");
 confetti.className="confetti";
 
 confetti.style.left=Math.random()*100+"vw";
-
-confetti.style.background=
-`hsl(${Math.random()*360},70%,60%)`;
-
-confetti.style.animationDuration=
-(3+Math.random()*4)+"s";
+confetti.style.background=`hsl(${Math.random()*360},70%,60%)`;
+confetti.style.animationDuration=(3+Math.random()*4)+"s";
 
 document.body.appendChild(confetti);
 
-setTimeout(()=>{
-confetti.remove();
-},7000);
+setTimeout(()=>confetti.remove(),7000);
 
 }
 
@@ -236,6 +296,74 @@ confetti.remove();
 }
 
 anniversaryConfetti();
+
+/* message modal */
+
+function openMessage(){
+document.getElementById("loveModal").classList.add("active");
+}
+
+function closeMessage(){
+document.getElementById("loveModal").classList.remove("active");
+}
+
+/* starfield */
+
+const canvas=document.getElementById("stars");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let stars=[];
+
+for(let i=0;i<150;i++){
+
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2
+});
+
+}
+
+let offsetX=0;
+let offsetY=0;
+
+window.addEventListener("mousemove",(e)=>{
+
+offsetX=(e.clientX-window.innerWidth/2)*0.02;
+offsetY=(e.clientY-window.innerHeight/2)*0.02;
+
+});
+
+function drawStars(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="white";
+
+stars.forEach(star=>{
+
+ctx.beginPath();
+
+ctx.arc(
+star.x+offsetX,
+star.y+offsetY,
+star.size,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+});
+
+requestAnimationFrame(drawStars);
+
+}
+
+drawStars();
 
 </script>
 
