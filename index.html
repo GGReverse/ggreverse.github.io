@@ -6,60 +6,87 @@
 <title>Unsere Zeit ❤️</title>
 
 <style>
+
 body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#ff9a9e,#fad0c4);
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    text-align:center;
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#ff758c,#ff7eb3);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+text-align:center;
+overflow:hidden;
 }
 
 .container{
-    background: rgba(0,0,0,0.25);
-    padding:40px;
-    border-radius:20px;
-    backdrop-filter: blur(10px);
+background: rgba(255,255,255,0.15);
+padding:40px;
+border-radius:20px;
+backdrop-filter: blur(15px);
+box-shadow:0 10px 40px rgba(0,0,0,0.2);
+max-width:400px;
 }
 
 h1{
-    font-size:2.5em;
+margin-top:0;
+font-size:28px;
+}
+
+.date{
+opacity:0.8;
+margin-bottom:20px;
 }
 
 .counter{
-    font-size:1.8em;
-    margin-top:20px;
+font-size:20px;
+line-height:1.6;
 }
 
 .heart{
-    font-size:40px;
-    animation: beat 1s infinite;
+font-size:60px;
+animation:beat 1.2s infinite;
+margin-bottom:10px;
 }
 
 @keyframes beat{
-    0%{transform:scale(1)}
-    50%{transform:scale(1.2)}
-    100%{transform:scale(1)}
+0%{transform:scale(1)}
+25%{transform:scale(1.15)}
+40%{transform:scale(1)}
+60%{transform:scale(1.15)}
+100%{transform:scale(1)}
 }
+
+.footer{
+margin-top:25px;
+font-size:14px;
+opacity:0.7;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <div class="heart">❤️</div>
-    <h1>Wir sind zusammen seit</h1>
-    <div id="date"></div>
 
-    <div class="counter" id="counter"></div>
+<div class="heart">❤️</div>
+
+<h1>Wir kennen uns schon seit</h1>
+
+<div class="date" id="date"></div>
+
+<div class="counter" id="counter"></div>
+
+<div class="footer">
+Für immer & ewig ✨
+</div>
+
 </div>
 
 <script>
 
-// HIER DATUM ÄNDERN
 const startDate = new Date("2023-08-12T00:00:00");
 
 document.getElementById("date").innerText =
@@ -67,19 +94,20 @@ startDate.toLocaleDateString("de-DE");
 
 function updateCounter(){
 
-    const now = new Date();
-    const diff = now - startDate;
+const now = new Date();
+const diff = now - startDate;
 
-    const seconds = Math.floor(diff / 1000) % 60;
-    const minutes = Math.floor(diff / (1000*60)) % 60;
-    const hours = Math.floor(diff / (1000*60*60)) % 24;
-    const days = Math.floor(diff / (1000*60*60*24));
+const seconds = Math.floor(diff / 1000) % 60;
+const minutes = Math.floor(diff / (1000*60)) % 60;
+const hours = Math.floor(diff / (1000*60*60)) % 24;
+const days = Math.floor(diff / (1000*60*60*24));
 
-    document.getElementById("counter").innerHTML =
-    days + " Tage<br>" +
-    hours + " Stunden<br>" +
-    minutes + " Minuten<br>" +
-    seconds + " Sekunden";
+document.getElementById("counter").innerHTML =
+days + " Tage<br>" +
+hours + " Stunden<br>" +
+minutes + " Minuten<br>" +
+seconds + " Sekunden";
+
 }
 
 setInterval(updateCounter,1000);
