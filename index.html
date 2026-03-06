@@ -15,26 +15,52 @@ padding:0;
 
 body{
 font-family:'Segoe UI',sans-serif;
-background: radial-gradient(circle at top,#1a0005,#000 80%);
+background:black;
 color:white;
+overflow:hidden;
+}
+
+/* intro screen */
+
+#intro{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:black;
+
 display:flex;
+
 justify-content:center;
 align-items:center;
-height:100vh;
-overflow:hidden;
+
+font-size:32px;
+
+z-index:10;
+
+}
+
+.cursor{
+border-right:3px solid white;
+padding-right:5px;
+animation:blink 1s infinite;
+}
+
+@keyframes blink{
+0%,50%,100%{border-color:white}
+25%,75%{border-color:transparent}
+}
+
+/* main app */
+
+#app{
 opacity:0;
-transform:scale(1.08);
-animation:openApp 1.2s ease forwards;
+transition:1s;
 }
-
-@keyframes openApp{
-to{
-opacity:1;
-transform:scale(1);
-}
-}
-
-/* star background */
 
 #stars{
 position:fixed;
@@ -44,8 +70,6 @@ width:100%;
 height:100%;
 z-index:0;
 }
-
-/* card */
 
 .container{
 background:rgba(255,0,60,0.08);
@@ -58,7 +82,10 @@ box-shadow:
 inset 0 0 25px rgba(255,0,80,0.15);
 text-align:center;
 max-width:420px;
+margin:auto;
+margin-top:25vh;
 z-index:2;
+position:relative;
 }
 
 h1{
@@ -122,15 +149,11 @@ animation:confettiFall linear forwards;
 }
 
 @keyframes confettiFall{
-from{
-transform:translateY(-10vh) rotate(0deg);
-}
-to{
-transform:translateY(110vh) rotate(720deg);
-}
+from{transform:translateY(-10vh) rotate(0deg)}
+to{transform:translateY(110vh) rotate(720deg)}
 }
 
-/* message modal */
+/* modal */
 
 .modal{
 position:fixed;
@@ -177,6 +200,12 @@ cursor:pointer;
 
 <body>
 
+<div id="intro">
+<span id="introText" class="cursor"></span>
+</div>
+
+<div id="app">
+
 <canvas id="stars"></canvas>
 
 <div class="container">
@@ -191,6 +220,8 @@ cursor:pointer;
 
 <div class="footer">
 für immer & ewig 🖤
+</div>
+
 </div>
 
 </div>
@@ -214,6 +245,38 @@ Ich freue mich auf alles, was noch vor uns liegt ❤️
 </div>
 
 <script>
+
+/* typing intro */
+
+const text="Hey Cassy ❤️";
+
+let i=0;
+
+function type(){
+
+if(i<text.length){
+
+document.getElementById("introText").innerHTML+=text.charAt(i);
+
+i++;
+
+setTimeout(type,90);
+
+}else{
+
+setTimeout(()=>{
+
+document.getElementById("intro").style.display="none";
+
+document.getElementById("app").style.opacity=1;
+
+},900);
+
+}
+
+}
+
+type();
 
 /* start date */
 
@@ -253,10 +316,13 @@ function createHeart(){
 const heart=document.createElement("div");
 
 heart.className="heart-bg";
+
 heart.innerHTML="❤";
 
 heart.style.left=Math.random()*100+"vw";
+
 heart.style.animationDuration=(6+Math.random()*6)+"s";
+
 heart.style.fontSize=(15+Math.random()*25)+"px";
 
 document.body.appendChild(heart);
@@ -282,7 +348,9 @@ const confetti=document.createElement("div");
 confetti.className="confetti";
 
 confetti.style.left=Math.random()*100+"vw";
+
 confetti.style.background=`hsl(${Math.random()*360},70%,60%)`;
+
 confetti.style.animationDuration=(3+Math.random()*4)+"s";
 
 document.body.appendChild(confetti);
@@ -297,22 +365,28 @@ setTimeout(()=>confetti.remove(),7000);
 
 anniversaryConfetti();
 
-/* message modal */
+/* modal */
 
 function openMessage(){
+
 document.getElementById("loveModal").classList.add("active");
+
 }
 
 function closeMessage(){
+
 document.getElementById("loveModal").classList.remove("active");
+
 }
 
-/* starfield */
+/* stars */
 
 const canvas=document.getElementById("stars");
+
 const ctx=canvas.getContext("2d");
 
 canvas.width=window.innerWidth;
+
 canvas.height=window.innerHeight;
 
 let stars=[];
@@ -320,19 +394,25 @@ let stars=[];
 for(let i=0;i<150;i++){
 
 stars.push({
+
 x:Math.random()*canvas.width,
+
 y:Math.random()*canvas.height,
+
 size:Math.random()*2
+
 });
 
 }
 
 let offsetX=0;
+
 let offsetY=0;
 
 window.addEventListener("mousemove",(e)=>{
 
 offsetX=(e.clientX-window.innerWidth/2)*0.02;
+
 offsetY=(e.clientY-window.innerHeight/2)*0.02;
 
 });
@@ -348,11 +428,17 @@ stars.forEach(star=>{
 ctx.beginPath();
 
 ctx.arc(
+
 star.x+offsetX,
+
 star.y+offsetY,
+
 star.size,
+
 0,
+
 Math.PI*2
+
 );
 
 ctx.fill();
